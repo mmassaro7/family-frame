@@ -1,0 +1,12 @@
+# Netlify settings. In the Netlify dashboard set "Base directory" to family-frame
+# (this file lives in that folder), and Netlify reads everything else from here.
+
+[build]
+  command = "npm run build"     # Vite builds the site into dist/
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"           # Vite 8 needs Node 20.19+ / 22.12+
+  # Not secrets: the scanner trips on these because the same text appears in the repo.
+  SECRETS_SCAN_OMIT_KEYS = "TIMEZONE,NODE_VERSION,DRIVE_FOLDER_ID"

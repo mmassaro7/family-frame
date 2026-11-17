@@ -1,0 +1,61 @@
+/* Weather: loud, bright and cartoony. Original art, bold outlines, halftone dots. */
+.wx { --ink: #1B1B1B; height: 100%; display: grid; grid-template-columns: 470px 1fr; grid-template-rows: 1fr 112px 188px; gap: 14px;
+  font-family: 'Fredoka', 'Archivo', 'Arial Rounded MT Bold', system-ui, sans-serif; }
+.wx b, .wx-title, .wx-deg { font-family: 'Bangers', 'Fredoka', Impact, 'Arial Black', sans-serif; font-weight: 400; letter-spacing: .03em; }
+.wx-sky--sun   { --sky1: #7FD6FF; --sky2: #FFF1A6; --card: #FFE066; }
+.wx-sky--cloud { --sky1: #A9C8EE; --sky2: #E9F1FB; --card: #CFE0F5; }
+.wx-sky--rain  { --sky1: #5E86D6; --sky2: #A9C6F2; --card: #9DBDF2; }
+.wx-sky--storm { --sky1: #4A4F8F; --sky2: #8A8FD0; --card: #A9A4F0; }
+.wx-sky--snow  { --sky1: #BFE3FF; --sky2: #FFFFFF; --card: #D8EEFF; }
+.wx-sky--moon  { --sky1: #272769; --sky2: #5B4FA8; --card: #8F86E8; }
+
+.wx-scene { grid-row: 1; position: relative; overflow: hidden; border: 6px solid var(--ink); border-radius: 28px; background: linear-gradient(180deg, var(--sky1), var(--sky2)); box-shadow: 8px 8px 0 var(--ink); }
+.wx-dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, .55) 22%, transparent 24%); background-size: 18px 18px; opacity: .5; }
+.wx-hero { position: absolute; left: 50%; top: 100px; margin-left: -150px; animation: wx-bob 3.2s ease-in-out infinite; }
+.wx-hill { position: absolute; left: -10%; right: -10%; bottom: -70px; height: 150px; background: #46C759; border-top: 6px solid var(--ink); border-radius: 50% 50% 0 0; }
+.wx-hill--b { left: 30%; right: -40%; bottom: -90px; height: 140px; background: #2FAE4A; }
+.wx-bubble { position: absolute; z-index: 2; left: 18px; right: 18px; top: 16px; padding: 12px 18px; background: #fff; border: 5px solid var(--ink); border-radius: 22px; display: flex; flex-direction: column; gap: 0; color: var(--ink); }
+.wx-bubble::after { content: ''; position: absolute; left: 50%; bottom: -22px; margin-left: -14px; width: 0; height: 0; border: 14px solid transparent; border-top: 22px solid var(--ink); border-bottom: 0; }
+.wx-bubble b { font-size: 34px; line-height: 1.05; }
+.wx-bubble span { font-size: 19px; font-weight: 600; }
+
+.wx-now { grid-row: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.wx-title { font-size: 30px; line-height: 1; color: var(--ink); background: #FFD21F; align-self: flex-start; padding: 6px 16px 4px; border: 5px solid var(--ink); border-radius: 999px; transform: rotate(-2deg); }
+.wx-big { display: flex; align-items: center; gap: 22px; }
+.wx-deg { font-size: 168px; line-height: .86; color: #FFD21F; -webkit-text-stroke: 7px var(--ink); text-shadow: 7px 7px 0 var(--ink); paint-order: stroke fill; padding-right: 10px; }
+.wx-deg sup { font-size: .42em; vertical-align: top; -webkit-text-stroke: 3px var(--ink); text-shadow: 3px 3px 0 var(--ink); position: relative; top: .1em; }
+.wx-sum { display: flex; flex-direction: column; gap: 2px; font-size: 22px; font-weight: 600; color: var(--ink); }
+.wx-sum b { font-size: 46px; line-height: 1; }
+.wx-stats { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; }
+.wx-stat { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 5px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); color: var(--ink); min-width: 0; }
+.wx-stat .i { flex: none; stroke-width: 2.4; }
+.wx-stat small { display: block; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; opacity: .8; }
+.wx-stat b { display: block; font-size: 32px; line-height: 1; white-space: nowrap; }
+.wx-stat em { display: block; font-style: normal; font-size: 14px; font-weight: 600; }
+.wx-stat.s1 { background: #8FD3FF; } .wx-stat.s2 { background: #B9F27C; } .wx-stat.s3 { background: #FFB3D1; }
+.wx-stat.s4 { background: #FFC86B; } .wx-stat.s5 { background: #FFE86B; } .wx-stat.s6 { background: #C9B6FF; }
+
+.wx-hours { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
+.wx-hr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; border: 5px solid var(--ink); border-radius: 20px; background: var(--card); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.wx-hr b { font-size: 19px; line-height: 1; }
+.wx-hr .wx-t { font-size: 24px; font-weight: 700; line-height: 1; }
+.wx-hr .wx-p { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 2px; line-height: 1.1; }
+
+.wx-days { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.wx-day { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 5px solid var(--ink); border-radius: 22px; background: var(--card); color: var(--ink); box-shadow: 5px 5px 0 var(--ink); min-width: 0; padding: 4px; }
+.wx-day.is-today { outline: 5px solid #FF3B6B; outline-offset: 2px; }
+.wx-dn { font-size: 24px; line-height: 1; }
+.wx-hl { display: flex; gap: 10px; align-items: baseline; font-size: 26px; font-weight: 700; line-height: 1; }
+.wx-hl i { font-style: normal; } .wx-hl u { text-decoration: none; opacity: .6; font-size: 21px; }
+.wx-dd { font-size: 14px; font-weight: 600; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.wx-dp { display: flex; align-items: center; gap: 2px; font-size: 14px; font-weight: 700; }
+.wx-wait { grid-column: 1 / -1; font-family: 'Bangers', Impact, sans-serif; font-size: 40px; display: grid; place-items: center; }
+
+/* motion (kept light) */
+.wx-rot { transform-origin: 100px 100px; animation: wx-spin 24s linear infinite; }
+.wx-drop { animation: wx-fall 1.4s ease-in infinite; }
+.wx-twinkle { animation: wx-pop 1.6s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes wx-spin { to { transform: rotate(360deg); } }
+@keyframes wx-bob { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(10px) rotate(1.5deg); } }
+@keyframes wx-fall { 0% { transform: translateY(-10px); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
+@keyframes wx-pop { from { opacity: .6; } to { opacity: 1; } }

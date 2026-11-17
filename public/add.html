@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F2EEE6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Frame To Do">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" href="/icon-192.png">
+<title>Add to the frame's lists</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+  :root { --paper: #F2EEE6; --card: #FAF8F3; --ink: #111; --mute: #7A756B; --line: #D6CFC0; }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/1.3 'Archivo', system-ui, sans-serif; padding: max(20px, env(safe-area-inset-top)) 16px 40px; }
+  main { max-width: 560px; margin: 0 auto; }
+  .kick { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+  h1 { font: 400 54px/1 'Instrument Serif', Georgia, serif; margin: 2px 0 18px; }
+  form { background: var(--ink); color: #fff; border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  input[type=text] { width: 100%; height: 60px; border: 0; border-radius: 14px; padding: 0 16px; font: 600 20px 'Archivo', system-ui, sans-serif; color: var(--ink); background: #fff; outline: none; }
+  .who { display: flex; flex-wrap: wrap; gap: 8px; }
+  .who button { height: 46px; padding: 0 16px; border: 0; border-radius: 999px; font: 700 16px 'Archivo', system-ui, sans-serif; background: rgba(255,255,255,.14); color: #fff; }
+  .who button.on { background: var(--c, #fff); color: var(--ci, #111); }
+  .go { height: 56px; border: 0; border-radius: 14px; background: #fff; color: var(--ink); font: 800 18px 'Archivo', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+  .go:disabled { opacity: .5; }
+  .msg { min-height: 24px; margin: 12px 4px 0; font-size: 17px; }
+  .msg.err { color: #B00020; }
+  .list { margin-top: 18px; }
+  .list h2 { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); margin: 0 0 4px; padding: 0 4px 8px; border-bottom: 2px solid var(--ink); }
+  .item { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 58px; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; font: 700 19px 'Archivo', system-ui, sans-serif; color: var(--ink); padding: 6px 4px; }
+  .box { width: 30px; height: 30px; flex: none; border-radius: 9px; box-shadow: inset 0 0 0 3px var(--line); }
+  .tag { margin-left: auto; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; background: var(--c, #111); color: var(--ci, #fff); }
+  .empty { color: var(--mute); padding: 14px 4px; }
+  .hint { margin-top: 26px; font-size: 14px; color: var(--mute); }
+  .lock { background: none; border: 0; padding: 0; font: inherit; color: var(--mute); text-decoration: underline; }
+  .tabs { display: flex; gap: 8px; margin: 0 0 14px; }
+  .tabs button { flex: 1; height: 48px; border: 0; border-radius: 999px; background: rgba(0,0,0,.07); color: var(--ink); font: 800 15px 'Archivo', system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+  .tabs button.on { background: var(--ink); color: #fff; }
+  #pinf { margin-top: 4px; }
+  #pinf p { margin: 0 4px 2px; font-size: 17px; color: #fff; }
+  #pin { text-align: center; letter-spacing: .4em; font-size: 28px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="kick">Family frame</div>
+  <h1 id="title">To Do</h1>
+  <div class="tabs" id="tabs" hidden><button type="button" data-m="todo" class="on">To Do</button><button type="button" data-m="shop">Shopping</button></div>
+  <form id="pinf" autocomplete="off" hidden>
+    <p>Enter the family PIN to use this page.</p>
+    <input type="password" id="pin" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="12" placeholder="PIN" aria-label="Family PIN">
+    <button class="go" id="pingo" type="submit">Unlock</button>
+  </form>
+  <form id="f" autocomplete="off" hidden>
+    <input type="text" id="text" placeholder="What needs doing?" maxlength="120" enterkeyhint="send" autocapitalize="sentences">
+    <div class="who" id="who"></div>
+    <button class="go" id="go" type="submit">Add to list</button>
+  </form>
+  <div class="msg" id="msg" aria-live="polite"></div>
+  <section class="list" id="list" hidden><h2 id="listh">On the list</h2><div id="items"></div></section>
+  <p class="hint" id="tip" hidden>Tip: save this page to your home screen (Share &rarr; Add to Home Screen) so it opens like an app.
+    <span id="lockrow" hidden><br><button class="lock" id="lock" type="button">Lock this phone</button></span></p>
+</main>
+<script>
+(function () {
+  // Family members. To add or rename someone, change this list (id must be lowercase, same as js/config.js).
+  var PEOPLE = [
+    { id: '', name: 'Anyone' },
+    { id: 'alex', name: 'Alex', color: '#FFB000', ink: '#111111' },
+    { id: 'jordan', name: 'Jordan', color: '#E02424', ink: '#FFFFFF' },
+    { id: 'riley', name: 'Riley', color: '#FF69B4', ink: '#111111' },
+    { id: 'casey', name: 'Casey', color: '#2D5BFF', ink: '#FFFFFF' }
+  ];
+  // How this phone proves it may use the page: a key in the link (?key=...), or a code it got by
+  // entering the family PIN the first time (kept on this phone until you tap "Lock this phone").
+  var KEY = '', usingToken = false;
+  try {
+    var m = location.search.match(/[?&]key=([^&]*)/);
+    if (m) localStorage.setItem('ff-key', decodeURIComponent(m[1]));
+    KEY = localStorage.getItem('ff-key') || '';
+    if (!KEY) { KEY = localStorage.getItem('ff-todo-token') || ''; usingToken = !!KEY; }
+  } catch (e) { if (m) KEY = decodeURIComponent(m[1]); }
+  var STORES = [{ id: 'kroger', name: 'Kroger', color: '#21409A', ink: '#FFFFFF' }, { id: 'sams', name: "Sam's Club", color: '#FFC999', ink: '#111111' }];   // same ids as js/config.js
+  var mode = 'todo', who = '', store = 'kroger';
+  try { who = localStorage.getItem('ff-who') || ''; mode = localStorage.getItem('ff-mode') === 'shop' ? 'shop' : 'todo'; store = localStorage.getItem('ff-store') || 'kroger'; } catch (e) {}
+  var $ = function (id) { return document.getElementById(id); };
+
+  function api(body) {
+    var url = (mode === 'shop' ? '/api/shopping' : '/api/todo') + (KEY ? '?key=' + encodeURIComponent(KEY) : '');
+    return fetch(url, body ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) } : undefined)
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) { var e = new Error(j.error || r.status); e.status = r.status; throw e; } return j; }); });
+  }
+  function paintWho() {
+    var box = $('who'); box.textContent = '';
+    if (mode === 'shop') {
+      STORES.forEach(function (s) {
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = s.name;
+        if (store === s.id) { b.className = 'on'; b.style.setProperty('--c', s.color); b.style.setProperty('--ci', s.ink); }
+        b.onclick = function () { store = s.id; try { localStorage.setItem('ff-store', store); } catch (e) {} paintWho(); };
+        box.appendChild(b);
+      });
+      return;
+    }
+    PEOPLE.forEach(function (p) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = p.name;
+      if (p.color) { b.style.setProperty('--c', p.color); b.style.setProperty('--ci', p.ink); }
+      if (who === p.id) b.className = 'on';
+      b.onclick = function () { who = p.id; try { localStorage.setItem('ff-who', who); } catch (e) {} paintWho(); };
+      box.appendChild(b);
+    });
+  }
+  function say(t, err) { var m = $('msg'); m.textContent = t; m.className = 'msg' + (err ? ' err' : ''); }
+  function person(id) { return PEOPLE.filter(function (p) { return p.id === id && id; })[0]; }
+
+  function paintList(items) {
+    var shop = mode === 'shop';
+    var open = items.filter(function (i) { return !i.done; });
+    $('list').hidden = false;
+    var box = $('items'); box.textContent = '';
+    if (!open.length) { var e = document.createElement('div'); e.className = 'empty'; e.textContent = shop ? 'Nothing to get.' : 'Nothing on the list.'; box.appendChild(e); return; }
+    open.forEach(function (i) {
+      var b = document.createElement('button'); b.className = 'item'; b.type = 'button';
+      var bx = document.createElement('span'); bx.className = 'box';
+      var tx = document.createElement('span'); tx.textContent = shop ? i.name + (i.qty > 1 ? ' ×' + i.qty : '') : i.text;
+      b.appendChild(bx); b.appendChild(tx);
+      var p = person(i.who);
+      var sp = shop && STORES.filter(function (s) { return s.id === i.store; })[0];
+      if (sp) { var st = document.createElement('span'); st.className = 'tag'; st.textContent = sp.name; st.style.setProperty('--c', sp.color); st.style.setProperty('--ci', sp.ink); b.appendChild(st); }
+      if (!shop && i.who) { var t = document.createElement('span'); t.className = 'tag'; t.textContent = p ? p.name : i.who; if (p) { t.style.setProperty('--c', p.color); t.style.setProperty('--ci', p.ink); } b.appendChild(t); }
+      b.onclick = function () { b.style.opacity = .4; api({ action: 'toggle', id: i.id, done: true }).then(load).catch(function () { b.style.opacity = 1; say('Could not check that off.', true); }); };
+      box.appendChild(b);
+    });
+  }
+  // The full family key can also see and check off the list; the add-only key just adds.
+  function load() {
+    var m = mode;
+    api().then(function (j) { if (m === mode) paintList(j.items); }).catch(function (err) {
+      $('list').hidden = true;
+      if (err.status === 401 && usingToken) { try { localStorage.removeItem('ff-todo-token'); } catch (e) {} KEY = ''; usingToken = false; show(false); say('The PIN changed. Enter the new one.', true); }
+    });
+  }
+
+  $('f').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var text = $('text').value.trim();
+    if (!text) return;
+    $('go').disabled = true; say('Adding…');
+    var req = mode === 'shop' ? { action: 'add', name: text, store: store } : { action: 'add', text: text, who: who, source: 'phone' };
+    api(req).then(function (r) {
+      $('text').value = '';
+      say(mode === 'shop' ? r.message : r.duplicate ? r.message : 'Added: ' + r.item.text);
+      load();
+    }).catch(function (err) {
+      if (err.status === 401 && usingToken) { try { localStorage.removeItem('ff-todo-token'); } catch (e) {} KEY = ''; usingToken = false; return show(false); }
+      say(err.status === 401 ? 'That link isn’t right. Open this page from the family link.' : err.status === 501 ? 'The list isn’t set up on the server yet.' : 'Could not add it. Try again.', true);
+    }).then(function () { $('go').disabled = false; $('text').focus(); });
+  });
+  function paintMode() {
+    var shop = mode === 'shop';
+    $('title').textContent = shop ? 'Shopping' : 'To Do';
+    $('text').placeholder = shop ? 'What do we need?' : 'What needs doing?';
+    $('listh').textContent = shop ? 'Still to get' : 'On the list';
+    [].forEach.call($('tabs').children, function (b) { b.className = b.dataset.m === mode ? 'on' : ''; });
+    $('list').hidden = true; say(''); paintWho();
+  }
+  $('tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.m === mode) return;
+    mode = b.dataset.m; try { localStorage.setItem('ff-mode', mode); } catch (x) {}
+    paintMode(); load();
+  });
+  function show(unlocked) {
+    $('tabs').hidden = !unlocked;
+    $('f').hidden = !unlocked; $('tip').hidden = !unlocked; $('lockrow').hidden = !(unlocked && usingToken);
+    $('pinf').hidden = unlocked; if (!unlocked) { $('list').hidden = true; say(''); $('pin').focus(); }
+  }
+  function start() { show(true); paintMode(); load(); }
+  $('lock').onclick = function () { try { localStorage.removeItem('ff-todo-token'); } catch (e) {} KEY = ''; usingToken = false; show(false); };
+  $('pinf').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pin = $('pin').value.trim(); if (!pin) return;
+    $('pingo').disabled = true; say('Checking…');
+    fetch('/api/pin', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin: pin }) })
+      .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
+      .then(function (r) {
+        if (r.status === 200 && r.j.token) {
+          try { localStorage.setItem('ff-todo-token', r.j.token); } catch (e) {}
+          KEY = r.j.token; usingToken = true; $('pin').value = ''; say(''); return start();
+        }
+        $('pin').value = '';
+        say(r.status === 401 ? 'That PIN isn’t right.' + (r.j.triesLeft === 0 ? ' No tries left for now.' : ' ' + r.j.triesLeft + ' tries left.')
+          : r.status === 429 ? 'Too many tries. Try again in ' + r.j.retryMinutes + ' minute' + (r.j.retryMinutes === 1 ? '' : 's') + '.'
+          : r.status === 501 ? 'A PIN hasn’t been set up yet. Open this page from the frame’s link instead.'
+          : 'Could not check the PIN. Try again.', true);
+      })
+      .catch(function () { say('Could not reach the server. Try again.', true); })
+      .then(function () { $('pingo').disabled = false; });
+  });
+  if (KEY || !$('pinf')) start(); else show(false);
+})();
+</script>
+</body>
+</html>

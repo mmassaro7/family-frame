@@ -1,0 +1,79 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "list keeper",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AddTodoIntent",
+          "slots": [
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "put {item} on the to do list",
+            "put {item} on my to do list",
+            "put {item} on our to do list",
+            "add {item} to the to do list",
+            "add {item} to my to do list",
+            "add {item} to our to do list",
+            "put {item} on the todo list",
+            "add {item} to the todo list",
+            "add task {item}",
+            "new task {item}",
+            "add chore {item}",
+            "we have to {item}",
+            "someone needs to {item}"
+          ]
+        },
+        {
+          "name": "AddShoppingIntent",
+          "slots": [
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "add {item} to the shopping list",
+            "add {item} to my shopping list",
+            "add {item} to our shopping list",
+            "put {item} on the shopping list",
+            "put {item} on my shopping list",
+            "put {item} on our shopping list",
+            "add {item} to the grocery list",
+            "add {item} to the groceries list",
+            "put {item} on the grocery list",
+            "we need {item}",
+            "pick up {item}",
+            "we are out of {item}",
+            "we ran out of {item}",
+            "we are low on {item}"
+          ]
+        }
+      ],
+      "types": []
+    }
+  }
+}

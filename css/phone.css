@@ -1,0 +1,195 @@
+/* ---------------------------------------------------------------- phone layout
+   Only applies when index.html adds .phone to <html> (a screen whose short side is under 600px, or ?phone=1).
+   The frame never gets this class, so none of this has to work in its WebView 106. */
+.phone, .phone body { height: 100%; }
+.phone .stage {
+  position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+  width: auto; height: auto; margin: 0; transform: none !important;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+}
+
+/* Tabs along the bottom */
+.phone .rail {
+  grid-row: 2; flex-direction: row; padding: 0 0 env(safe-area-inset-bottom);
+  border-right: 0; border-top: 2px solid var(--ink);
+}
+.phone .rail-item { flex: 1 1 0; min-width: 0; height: 58px; gap: 3px; font-size: 9.5px; letter-spacing: .03em; }
+.phone .rail-item .i { width: 22px; height: 22px; }
+.phone .rail-clock { display: none; }
+
+/* Each screen scrolls on its own */
+.phone .views { grid-row: 1; }
+.phone .view { padding: 14px 14px 24px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+.phone .view--bleed { padding: 0; overflow: hidden; }
+.phone .ambient, .phone .night { display: none; }
+
+/* Sheets, toasts and banners: fit the phone */
+.phone .sheet { width: calc(100% - 20px); max-height: calc(100% - 40px); border-radius: 22px; }
+.phone .sheet--wide { width: calc(100% - 20px); }
+.phone .sheet-pad { padding: 26px 20px 22px; }
+.phone .sheet-h { font-size: 36px; }
+.phone .evs-band { padding: 26px 20px 22px; }
+.phone .evs-band h2 { font-size: 42px; }
+.phone .toasts { position: fixed; left: 0; bottom: 74px; padding: 0 12px; }  /* above the tabs */
+.phone .toast { font-size: 16px; }
+.phone .banners { left: 12px; right: 12px; top: 10px; }
+
+/* ---- Today */
+.phone .home { height: auto; display: flex; flex-direction: column; gap: 14px; }
+.phone .h-clock { padding-bottom: 8px; }
+.phone .h-time { font-size: 72px; }
+.phone .h-ampm { font-size: 18px; margin: 4px 0 0 6px; }
+.phone .h-date { font-size: 20px; margin-top: 8px; }
+.phone .h-date b { font-size: 16px; }
+.phone .h-weather { padding: 0 0 8px; }
+.phone .h-wx-row { flex-direction: column; align-items: stretch; gap: 8px; }
+.phone .h-wx-icon .i { width: 40px; height: 40px; }
+.phone .h-wx-temp { font-size: 54px; }
+.phone .h-wx-meta { font-size: 15px; }
+.phone .h-wx-hours { grid-template-columns: repeat(6, 1fr); }
+.phone .h-hr { font-size: 14px; }
+.phone .h-wx-say { font-size: 19px; }
+.phone .h-dy-l, .phone .h-hr-l { font-size: 11px; }
+.phone .h-dy-t { font-size: 13px; display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+.phone .h-dy-t em { margin-left: 0; }
+.phone .h-main, .phone .h-main.has-hol { display: flex; flex-direction: column; gap: 14px; }
+.phone .h-hol-slot { min-height: 64px; }
+.phone .h-hero { padding: 16px 18px; gap: 12px; min-height: 150px; }
+.phone .h-hero-title { font-size: 34px; white-space: normal; overflow: visible; }
+.phone .h-hero--empty .h-hero-title { font-size: 30px; }
+.phone .h-hero-meta { font-size: 15px; }
+.phone .h-hero-count { font-size: 64px; }
+.phone .h-hero-count small { font-size: 14px; margin-top: 6px; }
+.phone .h-lanes { grid-template-columns: 1fr 1fr !important; gap: 16px 10px; }  /* home.js sets 4 columns inline */
+.phone .h-lane-head b { font-size: 15px; }
+.phone .h-ev { min-height: 50px; padding: 6px 10px; }
+.phone .h-ev-t { font-size: 13px; }
+.phone .h-ev-n { font-size: 15px; }
+.phone .h-free { font-size: 17px; }
+.phone .h-more { font-size: 13px; }
+.phone .h-side { display: flex; flex-direction: column; gap: 14px; }
+.phone .h-photo { height: 240px; }
+.phone .h-stat .num { font-size: 44px; }
+
+/* ---- Calendar: List (phone only) and Month */
+.phone #view-calendar { padding-top: 10px; }
+.phone .cal-head { flex-wrap: wrap; height: auto; gap: 8px; }
+.phone .cal-head .icon-btn { width: 44px; height: 44px; }
+/* Row 1: arrow, title, arrow. Row 2: List / Month, then Today when you've paged away. */
+.phone .cal-title { flex: 1 1 calc(100% - 120px); min-width: 0; padding: 0 2px; align-items: center; }
+.phone .cal-title .serif { font-size: 24px; }
+.phone .cal-head [data-nav="1"] { order: 2; }
+.phone .cal-legend { display: none; }
+.phone .cal-head .seg { order: 6; flex: 1; }
+.phone .cal-head .seg button { flex: 1; min-height: 40px; font-size: 14px; }
+.phone .cal-head [data-today] { order: 7; min-height: 46px; padding: 0 16px; font-size: 14px; }
+.phone .cal-head [data-today].is-hidden { display: none; }
+.phone .cal-body { overflow-y: auto; }
+.ls { padding-bottom: 20px; }
+.ls-day { margin-bottom: 14px; }
+.ls-head { display: flex; align-items: baseline; gap: 8px; padding: 6px 4px; border-bottom: 3px solid var(--ink); margin-bottom: 6px; }
+.ls-head .num { font-size: 26px; line-height: .9; }
+.ls-head b { font-size: 15px; font-weight: 800; font-stretch: 80%; text-transform: uppercase; letter-spacing: .05em; }
+.ls-head small { font-size: 13px; color: var(--mute); font-weight: 700; text-transform: uppercase; margin-right: auto; }
+.ls-day.is-today .ls-head { background: var(--ink); color: var(--paper); border-radius: 10px 10px 0 0; padding: 8px 10px 6px; }
+.ls-day.is-today .ls-head small { color: inherit; opacity: .7; }
+.ls-ev { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 10px; margin-bottom: 4px; border-radius: 10px; background: rgb(var(--c-rgb) / .14); border-left: 6px solid var(--c); }
+.ls-ev.is-past { opacity: .5; }
+.ls-t { flex: none; width: 66px; font-size: 14px; color: var(--ink-2); }
+.ls-n { flex: 1; min-width: 0; font-size: 16px; font-weight: 600; line-height: 1.2; }
+.ls-free { font-size: 17px; color: var(--mute); padding: 4px 6px; }
+.phone .month { height: auto; }
+.phone .mo-dow .label { font-size: 11px; }
+.phone .mo-grid { grid-auto-rows: minmax(64px, auto); gap: 3px; }
+.phone .mo-cell { padding: 4px 3px; border-radius: 8px; min-width: 0; }
+.phone .mo-top .num { font-size: 15px; }
+.phone .mo-bar { font-size: 10px; padding: 1px 3px; }
+.phone .mo-more { font-size: 10px; }
+
+/* ---- Shopping and To Do: add box on top, then the list */
+.phone .shop, .phone .todo { height: auto; display: flex; flex-direction: column; gap: 14px; }
+.phone .s-head, .phone .t-head { flex-wrap: wrap; gap: 6px 14px; }
+.phone .s-head h1, .phone .t-head h1 { font-size: 42px; }
+.phone .s-count, .phone .t-count { font-size: 16px; padding-top: 14px; }
+.phone .s-count .num, .phone .t-count .num { font-size: 26px; }
+.phone .s-head .seg, .phone .t-head .seg { max-width: 100%; overflow-x: auto; }
+.phone .s-head .seg button, .phone .t-head .seg button { min-height: 42px; padding: 0 14px; font-size: 14px; }
+.phone .s-head, .phone .t-head { order: -2; }
+.phone .s-side, .phone .t-side { order: -1; }
+.phone .s-list, .phone .t-list { overflow: visible; padding-bottom: 0; }
+.phone .s-input-wrap, .phone .t-input-wrap { height: 58px; padding: 0 14px; }
+.phone .s-input, .phone .t-input { font-size: 20px; }
+.phone .s-add, .phone .t-add { padding: 10px; gap: 10px; }
+.phone .s-usuals { grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; }
+.phone .s-tile { min-height: 56px; padding: 8px 10px; }
+.phone .s-tile b { font-size: 15px; }
+.phone .s-tile span { font-size: 10px; }
+.phone .s-ac-row { min-height: 56px; }
+.phone .s-ac-row b { font-size: 18px; }
+.phone .s-row, .phone .t-row { min-height: 60px; }
+.phone .s-box, .phone .t-box { width: 32px; height: 32px; border-radius: 10px; }
+.phone .s-name b { font-size: 18px; }
+.phone .s-name small { font-size: 13px; }
+.phone .s-store, .phone .t-who { font-size: 10px; padding: 4px 6px; }
+.phone .s-qty button { width: 44px; height: 44px; }
+.phone .s-qty .num { font-size: 20px; min-width: 20px; }
+.phone .t-text { font-size: 18px; }
+.phone .s-empty, .phone .t-empty { font-size: 30px; padding: 30px 0; }
+.phone .t-pick-b { height: 42px; padding: 0 14px; font-size: 16px; }
+.phone .t-go { height: 52px; font-size: 18px; }
+.phone .t-phone { display: none; }  /* the "add from your phone" QR code: already on the phone */
+.phone .s-drawer-h { min-height: 56px; font-size: 17px; padding: 0 14px; }
+.phone .s-got, .phone .t-got { font-size: 16px; min-height: 48px; }
+
+/* ---- Weather */
+.phone .wx { height: auto; display: flex; flex-direction: column; gap: 14px; }
+.phone .wx-scene { height: 300px; flex: none; border-width: 5px; box-shadow: 5px 5px 0 var(--ink); }
+.phone .wx-hero { top: 70px; margin-left: -100px; }
+.phone .wx-hero .wx-art { width: 200px; height: 200px; }
+.phone .wx-bubble b { font-size: 26px; }
+.phone .wx-bubble span { font-size: 16px; }
+.phone .wx-deg { font-size: 104px; -webkit-text-stroke-width: 5px; text-shadow: 5px 5px 0 var(--ink); }
+.phone .wx-sum { font-size: 17px; }
+.phone .wx-sum b { font-size: 32px; }
+.phone .wx-stats { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+.phone .wx-stat { padding: 8px 10px; border-width: 4px; }
+.phone .wx-stat b { font-size: 24px; }
+.phone .wx-hours, .phone .wx-days { display: flex; overflow-x: auto; padding: 0 6px 8px 0; }
+.phone .wx-hr { flex: none; width: 82px; height: 118px; border-width: 4px; }
+.phone .wx-day { flex: none; width: 112px; height: 170px; border-width: 4px; }
+.phone .wx-day.is-today { outline-width: 4px; }
+
+/* ---- Stocks */
+.phone .sk-head h1 { font-size: 42px; }
+.phone .sk-note { font-size: 14px; }
+.phone .sk-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 150px; gap: 10px; overflow: visible; padding-bottom: 70px; }
+.phone .sk-sym { font-size: 22px; }
+.phone .sk-pct { font-size: 16px; }
+.phone .sk-price { font-size: 30px; }
+.phone .sk-chg { font-size: 15px; }
+.phone .sk-spark { width: 80px; height: 28px; }
+.phone .sk-add { position: fixed; right: 14px; bottom: 74px; height: 48px; font-size: 16px; z-index: 6; }
+.phone .sk-sheet { min-width: 0; }
+.phone .sk-sg { grid-template-columns: 64px 1fr; min-height: 52px; padding: 6px 10px; }
+.phone .sk-sg b { font-size: 17px; }
+.phone .sk-sg span { font-size: 15px; }
+.phone .sk-sg small { display: none; }
+.phone .sk-input { height: 60px; font-size: 24px; }
+
+/* ---- Photos */
+.phone .polaroid { padding: 10px 10px 0; }
+.phone .polaroid-img { width: 300px; height: 220px; }
+.phone .polaroid--p .polaroid-img { width: 240px; height: 320px; }
+.phone .polaroid figcaption { font-size: 18px; padding: 10px 4px 12px; }
+.phone .cap { left: 18px; bottom: 80px; max-width: 85%; }
+.phone .cap-date { font-size: 44px; }
+.phone .cap--m .cap-date { font-size: 34px; }
+.phone .ph-top { top: 10px; left: 10px; right: 10px; display: flex; justify-content: center; }
+.phone .ph-top .seg { max-width: 100%; overflow-x: auto; }
+.phone .ph-top .seg button { min-height: 40px; padding: 0 12px; font-size: 13px; }
+.phone .ph-bottom { right: 12px; bottom: 14px; }
+.phone .ph-btn { height: 48px; min-width: 48px; font-size: 14px; padding: 0 12px; }
+
+/* Shopping: the usuals / suggestions stay hidden until the Add an item bar is tapped */
+.phone .shop:not(.is-adding) .s-suggest { display: none; }

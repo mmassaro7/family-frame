@@ -1,0 +1,68 @@
+/* Holiday labels: each holiday has its own colors and type (data-t). */
+.hol { --hb: #444; --hi: #fff; display: inline-flex; align-items: center; gap: 5px; min-width: 0; max-width: 100%; background: var(--hb); color: var(--hi); border-radius: 6px; font-weight: 800; white-space: nowrap; }
+.hol .i { flex: none; }
+.hol-n { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.hol--m { height: 20px; padding: 0 6px 0 4px; gap: 4px; font-size: 12px; flex: 0 1 auto; }
+.hol--m .i { stroke-width: 2.2; }
+.hol--b { display: flex; width: 100%; min-height: 40px; padding: 0 10px; border-radius: 8px; font-size: 16px; }
+
+/* themes: colors + type */
+[data-t="newyear"]  { --hb: #1B1F3B; --hi: #F6D675; font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: .01em; }
+[data-t="mlk"]      { --hb: #1D4E5F; --hi: #F6D675; font-family: var(--serif); font-style: italic; font-weight: 400; }
+[data-t="goodfri"]  { --hb: #4B2E83; --hi: #F3E9FF; font-family: var(--serif); font-style: italic; font-weight: 400; }
+[data-t="patriot"]  { --hb: #1F3A6E; --hi: #FFFFFF; text-transform: uppercase; font-stretch: 80%; letter-spacing: .07em; }
+[data-t="july4"]    { --hb: #B31B34; --hi: #FFFFFF; text-transform: uppercase; font-stretch: 80%; letter-spacing: .08em; }
+[data-t="labor"]    { --hb: #2F5D7C; --hi: #FFE0A8; text-transform: uppercase; font-stretch: 80%; letter-spacing: .07em; }
+[data-t="thanks"]   { --hb: #B5541C; --hi: #FFF1D6; font-family: var(--serif); font-style: italic; font-weight: 400; }
+[data-t="thanks2"]  { --hb: #6B3B1F; --hi: #FFE2B8; font-family: var(--serif); font-style: italic; font-weight: 400; }
+[data-t="xmaseve"]  { --hb: #A4161A; --hi: #FFFFFF; font-family: var(--serif); font-style: italic; font-weight: 400; }
+[data-t="xmas"]     { --hb: #0F5132; --hi: #FFFFFF; font-family: var(--serif); font-style: italic; font-weight: 400; }
+.hol[data-t="newyear"], .hol[data-t="mlk"], .hol[data-t="goodfri"], .hol[data-t="thanks"], .hol[data-t="thanks2"], .hol[data-t="xmaseve"], .hol[data-t="xmas"] { font-size: 1.12em; }
+.hol--m[data-t="newyear"], .hol--m[data-t="mlk"], .hol--m[data-t="goodfri"], .hol--m[data-t="thanks"], .hol--m[data-t="thanks2"], .hol--m[data-t="xmaseve"], .hol--m[data-t="xmas"] { font-size: 13px; }
+
+/* month cell: date number with the holiday to its right */
+.mo-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.mo-top .num { flex: none; }
+
+/* week + 3 day */
+.wk-hol { margin: 0; }
+.allday--hol { padding: 8px 0 6px; }
+.allday--hol .allday-grid { align-items: stretch; }
+
+/* Today view banner */
+.hol-banner { position: relative; overflow: hidden; display: flex; align-items: center; gap: 18px; min-height: 84px; padding: 10px 26px; border-radius: 14px;
+  background: linear-gradient(100deg, var(--hb) 0%, var(--hb2, var(--hb)) 100%); color: var(--hi); }
+.hol-b-icon { position: relative; z-index: 1; flex: none; width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, .16); display: flex; align-items: center; justify-content: center; }
+.hol-b-text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hol-b-text small { font-size: 13px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; opacity: .8; font-family: var(--sans, inherit); font-style: normal; }
+.hol-b-text b { font-size: 46px; line-height: 1; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hol-banner[data-t="patriot"] .hol-b-text b, .hol-banner[data-t="july4"] .hol-b-text b, .hol-banner[data-t="labor"] .hol-b-text b { font-weight: 800; font-size: 40px; }
+.hol-sp { position: absolute; color: var(--hi); opacity: .18; pointer-events: none; animation: hol-twinkle 4s ease-in-out infinite alternate; }
+.hol-sp.sp1 { right: 40px; top: 6px; transform: rotate(12deg); }
+.hol-sp.sp2 { right: 150px; bottom: -8px; transform: scale(.7) rotate(-18deg); animation-delay: 1.2s; }
+.hol-sp.sp3 { right: 250px; top: -4px; transform: scale(.5) rotate(25deg); animation-delay: 2.1s; }
+.hol-sp.sp4 { right: 330px; bottom: 8px; transform: scale(.4) rotate(-8deg); animation-delay: .6s; }
+@keyframes hol-twinkle { from { opacity: .08; } to { opacity: .3; } }
+.hol-banner[data-t="newyear"]  { --hb2: #3B2E6E; }
+.hol-banner[data-t="mlk"]      { --hb2: #3B7A8C; }
+.hol-banner[data-t="goodfri"]  { --hb2: #7B52C2; }
+.hol-banner[data-t="patriot"]  { --hb2: #B31B34; }
+.hol-banner[data-t="july4"]    { --hb2: #1F3A6E; }
+.hol-banner[data-t="labor"]    { --hb2: #E07B1F; }
+.hol-banner[data-t="thanks"]   { --hb2: #E8A33D; }
+.hol-banner[data-t="thanks2"]  { --hb2: #B5541C; }
+.hol-banner[data-t="xmaseve"]  { --hb2: #0F5132; }
+.hol-banner[data-t="xmas"]     { --hb2: #A4161A; }
+
+.wk-hol .hol--b { font-size: 15px; padding: 0 8px; gap: 6px; }
+.wk-hol .hol--b[data-t="newyear"], .wk-hol .hol--b[data-t="mlk"], .wk-hol .hol--b[data-t="goodfri"], .wk-hol .hol--b[data-t="thanks"], .wk-hol .hol--b[data-t="thanks2"], .wk-hol .hol--b[data-t="xmaseve"], .wk-hol .hol--b[data-t="xmas"] { font-size: 17px; }
+
+/* compact banner on the home screen */
+.h-hol-slot .hol-banner { min-height: 0; padding: 6px 20px; gap: 14px; border-radius: 12px; }
+.h-hol-slot .hol-b-icon { width: 48px; height: 48px; }
+.h-hol-slot .hol-b-icon .i { width: 32px; height: 32px; }
+.h-hol-slot .hol-b-text { gap: 0; }
+.h-hol-slot .hol-b-text small { font-size: 11px; }
+.h-hol-slot .hol-b-text b { font-size: 34px; }
+.h-hol-slot .hol-banner[data-t="patriot"] .hol-b-text b, .h-hol-slot .hol-banner[data-t="july4"] .hol-b-text b, .h-hol-slot .hol-banner[data-t="labor"] .hol-b-text b { font-size: 30px; }
+.h-hol-slot .hol-sp { transform-origin: center; }
